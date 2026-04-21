@@ -11,6 +11,7 @@ import { createOrder } from '../lib/orders';
 import { createStripeCheckoutSession } from '../lib/stripe';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import PhoneInput from '../components/PhoneInput';
 
 interface CheckoutFormData {
   fullName: string;
@@ -287,9 +288,8 @@ export default function CheckoutPage() {
                 {[
                   { name: 'fullName', label: i18n.language === 'ar' ? 'الاسم الكامل' : 'Full name', type: 'text' },
                   { name: 'email', label: i18n.language === 'ar' ? 'البريد الإلكتروني' : 'Email', type: 'email' },
-                  { name: 'phone', label: i18n.language === 'ar' ? 'رقم الهاتف' : 'Phone', type: 'tel', colSpan: true },
                 ].map((field) => (
-                  <div key={field.name} className={field.colSpan ? 'md:col-span-2' : ''}>
+                  <div key={field.name}>
                     <label className="mb-2 block text-sm font-bold text-[#002B49]">{field.label}</label>
                     <input
                       name={field.name}
@@ -308,6 +308,28 @@ export default function CheckoutPage() {
                     )}
                   </div>
                 ))}
+
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-bold text-[#002B49]">
+                    {i18n.language === 'ar' ? 'رقم الهاتف' : 'Phone'}
+                  </label>
+                  <PhoneInput
+                    name="phone"
+                    value={formData.phone}
+                    onChange={(next) => {
+                      setFormData((current) => ({ ...current, phone: next }));
+                      if (errors.phone) setErrors((current) => ({ ...current, phone: undefined }));
+                    }}
+                    placeholder={i18n.language === 'ar' ? '5xxxxxxxx' : '5xxxxxxxx'}
+                    hasError={Boolean(errors.phone)}
+                  />
+                  {errors.phone && (
+                    <p className="mt-2 flex items-center gap-1 text-sm text-red-600">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.phone}
+                    </p>
+                  )}
+                </div>
               </div>
             </motion.section>
 

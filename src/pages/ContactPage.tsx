@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin, MessageCircle, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import PhoneInput from '../components/PhoneInput';
 import { submitContactMessage } from '../lib/submissions';
 
 export default function ContactPage() {
@@ -205,14 +206,12 @@ export default function ContactPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-bold text-[#002B49] mb-2 text-start">{t('contact.phone')}</label>
-                          <input
+                          <PhoneInput
                             name="phone"
-                            type="tel"
                             value={form.phone}
-                            onChange={handleChange}
+                            onChange={(next) => setForm((prev) => ({ ...prev, phone: next }))}
                             placeholder={t('contact.phonePh')}
                             required
-                            className="w-full h-12 px-4 rounded-xl border-2 border-[#e8d9c5] bg-[#F7F4F0] text-[#002B49] font-medium text-start focus:outline-none focus:border-[#D4AF37] placeholder:text-[#b5a090] transition-colors"
                           />
                         </div>
                         <div className="md:col-span-2">

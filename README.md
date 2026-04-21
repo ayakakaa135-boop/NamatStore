@@ -35,10 +35,10 @@ npm run dev
 7. أنشئ ملف `.env` في جذر المشروع:
 
    ```env
-   VITE_SUPABASE_URL=https://xxxx.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key
-   APP_URL=https://example.com
-   STRIPE_SECRET_KEY=sk_test_xxx
+   VITE_SUPABASE_URL=""
+   VITE_SUPABASE_ANON_KEY=""
+   APP_URL=""
+   STRIPE_SECRET_KEY=""
    ```
 
 8. أعد تشغيل `npm run dev`.

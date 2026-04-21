@@ -11,6 +11,8 @@ import { createOrder } from '../lib/orders';
 import { createStripeCheckoutSession } from '../lib/stripe';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 interface CheckoutFormData {
   fullName: string;
@@ -39,7 +41,7 @@ export default function CheckoutPage() {
     fullName: '',
     email: '',
     phone: '',
-    country: 'Saudi Arabia',
+    country: 'SA', // Use ISO code for better library support
     city: '',
     address: '',
     postalCode: '',
@@ -50,8 +52,17 @@ export default function CheckoutPage() {
   const shipping = total >= 500 ? 0 : 30;
   const grandTotal = total + shipping;
   const countries = useMemo(
-    () => ['Saudi Arabia', 'United Arab Emirates', 'Kuwait', 'Qatar', 'Bahrain', 'Oman', 'Jordan', 'Egypt'],
-    []
+    () => [
+      { code: 'SA', name: i18n.language === 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia' },
+      { code: 'AE', name: i18n.language === 'ar' ? 'الإمارات العربية المتحدة' : 'United Arab Emirates' },
+      { code: 'KW', name: i18n.language === 'ar' ? 'الكويت' : 'Kuwait' },
+      { code: 'QA', name: i18n.language === 'ar' ? 'قطر' : 'Qatar' },
+      { code: 'BH', name: i18n.language === 'ar' ? 'البحرين' : 'Bahrain' },
+      { code: 'OM', name: i18n.language === 'ar' ? 'عُمان' : 'Oman' },
+      { code: 'EG', name: i18n.language === 'ar' ? 'مصر' : 'Egypt' },
+      { code: 'JO', name: i18n.language === 'ar' ? 'الأردن' : 'Jordan' },
+    ],
+    [i18n.language]
   );
 
   useEffect(() => {
@@ -99,10 +110,8 @@ export default function CheckoutPage() {
       nextErrors.email = i18n.language === 'ar' ? 'البريد الإلكتروني غير صحيح.' : 'Email format is invalid.';
     }
 
-    if (!formData.phone.trim()) {
+    if (!formData.phone || formData.phone.trim().length < 5) {
       nextErrors.phone = i18n.language === 'ar' ? 'رقم الهاتف مطلوب.' : 'Phone number is required.';
-    } else if (!phoneRegex.test(formData.phone.trim())) {
-      nextErrors.phone = i18n.language === 'ar' ? 'رقم الهاتف غير صحيح.' : 'Phone number format is invalid.';
     }
 
     if (!formData.city.trim()) {
@@ -184,7 +193,7 @@ export default function CheckoutPage() {
           })),
           customerEmail: formData.email,
           shippingAddress: {
-            country: formData.country,
+            country: countries.find(c => c.code === formData.country)?.name || formData.country,
             city: formData.city,
             address: formData.address,
             postalCode: formData.postalCode,
@@ -284,30 +293,70 @@ export default function CheckoutPage() {
               </div>
 
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {[
-                  { name: 'fullName', label: i18n.language === 'ar' ? 'الاسم الكامل' : 'Full name', type: 'text' },
-                  { name: 'email', label: i18n.language === 'ar' ? 'البريد الإلكتروني' : 'Email', type: 'email' },
-                  { name: 'phone', label: i18n.language === 'ar' ? 'رقم الهاتف' : 'Phone', type: 'tel', colSpan: true },
-                ].map((field) => (
-                  <div key={field.name} className={field.colSpan ? 'md:col-span-2' : ''}>
-                    <label className="mb-2 block text-sm font-bold text-[#002B49]">{field.label}</label>
-                    <input
-                      name={field.name}
-                      type={field.type}
-                      value={formData[field.name as keyof CheckoutFormData] as string}
-                      onChange={handleChange}
-                      className={`h-12 w-full rounded-xl border-2 bg-[#F7F4F0] px-4 font-medium text-[#002B49] outline-none transition ${
-                        errors[field.name as keyof CheckoutFormData] ? 'border-red-400' : 'border-[#e8d9c5] focus:border-[#D4AF37]'
-                      }`}
-                    />
-                    {errors[field.name as keyof CheckoutFormData] && (
-                      <p className="mt-2 flex items-center gap-1 text-sm text-red-600">
-                        <AlertCircle className="h-4 w-4" />
-                        {errors[field.name as keyof CheckoutFormData]}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                <div className="md:col-span-1">
+                  <label className="mb-2 block text-sm font-bold text-[#002B49]">
+                    {i18n.language === 'ar' ? 'الاسم الكامل' : 'Full name'}
+                  </label>
+                  <input
+                    name="fullName"
+                    type="text"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    placeholder={i18n.language === 'ar' ? 'مثال: نورة الأحمد' : 'e.g. Nora Ahmed'}
+                    className={`h-12 w-full rounded-xl border-2 bg-[#F7F4F0] px-4 font-medium text-[#002B49] outline-none transition ${
+                      errors.fullName ? 'border-red-400' : 'border-[#e8d9c5] focus:border-[#D4AF37]'
+                    }`}
+                  />
+                  {errors.fullName && (
+                    <p className="mt-2 flex items-center gap-1 text-sm text-red-600">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.fullName}
+                    </p>
+                  )}
+                </div>
+
+                <div className="md:col-span-1">
+                  <label className="mb-2 block text-sm font-bold text-[#002B49]">
+                    {i18n.language === 'ar' ? 'رقم الجوال' : 'Phone number'}
+                  </label>
+                  <PhoneInput
+                    international
+                    defaultCountry="SA"
+                    value={formData.phone}
+                    onChange={(value) => setFormData(prev => ({ ...prev, phone: value || '' }))}
+                    className={`phone-input-container h-12 w-full rounded-xl border-2 bg-[#F7F4F0] px-3 font-medium text-[#002B49] outline-none transition ${
+                      errors.phone ? 'border-red-400' : 'border-[#e8d9c5] focus-within:border-[#D4AF37]'
+                    }`}
+                  />
+                  {errors.phone && (
+                    <p className="mt-2 flex items-center gap-1 text-sm text-red-600">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.phone}
+                    </p>
+                  )}
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="mb-2 block text-sm font-bold text-[#002B49]">
+                    {i18n.language === 'ar' ? 'البريد الإلكتروني' : 'Email'}
+                  </label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="roselkaka47@gmail.com"
+                    className={`h-12 w-full rounded-xl border-2 bg-[#F7F4F0] px-4 font-medium text-[#002B49] outline-none transition ${
+                      errors.email ? 'border-red-400' : 'border-[#e8d9c5] focus:border-[#D4AF37]'
+                    }`}
+                  />
+                  {errors.email && (
+                    <p className="mt-2 flex items-center gap-1 text-sm text-red-600">
+                      <AlertCircle className="h-4 w-4" />
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
               </div>
             </motion.section>
 
@@ -345,8 +394,8 @@ export default function CheckoutPage() {
                     className="h-12 w-full rounded-xl border-2 border-[#e8d9c5] bg-[#F7F4F0] px-4 font-medium text-[#002B49] outline-none transition focus:border-[#D4AF37]"
                   >
                     {countries.map((country) => (
-                      <option key={country} value={country}>
-                        {country}
+                      <option key={country.code} value={country.code}>
+                        {country.name}
                       </option>
                     ))}
                   </select>

@@ -5,7 +5,7 @@ const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 const stripe = stripeSecretKey
   ? new Stripe(stripeSecretKey, {
-      apiVersion: '2025-02-24.acacia',
+      apiVersion: '2024-06-20',
     })
   : null;
 
@@ -121,7 +121,7 @@ export const handler: Handler = async (event) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      payment_method_types: ['card'],
+      automatic_payment_methods: { enabled: true },
       line_items: lineItems,
       success_url: body.successUrl,
       cancel_url: body.cancelUrl,
@@ -178,6 +178,12 @@ export const handler: Handler = async (event) => {
     };
   } catch (error) {
     const err = error as Stripe.errors.StripeError & Error;
+    console.error('Stripe Session Error:', {
+      message: err.message,
+      type: err.type,
+      code: err.code,
+      param: err.param
+    });
     const statusCode =
       err.type === 'StripeInvalidRequestError'
         ? 400

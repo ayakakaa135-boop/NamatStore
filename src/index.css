@@ -160,3 +160,48 @@
   .scrollbar-hide::-webkit-scrollbar { display: none; }
   .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 }
+
+/* Phone input styling for NAMAT */
+.phone-input-container {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.phone-input-container .PhoneInputInput {
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  font-size: 0.95rem;
+  color: #002B49;
+}
+
+.phone-input-container .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.phone-input-container .PhoneInputCountrySelectArrow {
+  opacity: 0.6;
+  width: 0.35em;
+  height: 0.35em;
+}
+
+.phone-input-container .PhoneInputCountryIcon {
+  width: 1.5em;
+  height: 1em;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 1px rgba(0,0,0,0.2);
+}
+
+[dir="rtl"] .phone-input-container {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .PhoneInputInput {
+  text-align: right;
+}

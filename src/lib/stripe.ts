@@ -9,7 +9,8 @@ export async function createStripeCheckoutSession(payload: StripeCheckoutRequest
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data?.error || 'Could not create Stripe checkout session');
+    console.error('Stripe Function Error:', data);
+    throw new Error(data?.details || data?.error || 'Could not create Stripe checkout session');
   }
 
   return data as StripeCheckoutResponse;

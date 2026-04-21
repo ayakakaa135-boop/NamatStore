@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://namat-store.netlify.app/sitemap.xml

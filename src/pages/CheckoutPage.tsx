@@ -199,8 +199,8 @@ export default function CheckoutPage() {
             postalCode: formData.postalCode,
           },
           shippingAmount: shipping,
-          successUrl: `${window.location.origin}/order-success?session_id={CHECKOUT_SESSION_ID}&order_id=${result.orderId}`,
-          cancelUrl: `${window.location.origin}/checkout?canceled=true&order_id=${result.orderId}`,
+          successUrl: `${window.location.origin}/order-success?session_id={CHECKOUT_SESSION_ID}&order_id=${encodeURIComponent(result.orderId)}`,
+          cancelUrl: `${window.location.origin}/checkout?canceled=true&order_id=${encodeURIComponent(result.orderId)}`,
         });
 
         if (!checkout.url) {

@@ -60,6 +60,8 @@ export default async function (req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing required fields: orderId, customerEmail, or items' });
     }
 
+    const origin = new URL(body.successUrl).origin;
+
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = body.items.map((item) => {
       if (!item.name || !item.price || !item.quantity) {
         throw new Error(`Invalid item data for product ${item.product_id}`);
@@ -69,13 +71,18 @@ export default async function (req: VercelRequest, res: VercelResponse) {
         .filter(Boolean)
         .join(' - ');
 
+      // Stripe requires absolute URLs for images
+      const imageUrl = item.image 
+        ? (item.image.startsWith('http') ? item.image : `${origin}${item.image.startsWith('/') ? '' : '/'}${item.image}`)
+        : undefined;
+
       return {
         price_data: {
           currency: 'sar',
           product_data: {
             name: item.name,
             description: descriptor,
-            images: item.image ? [item.image] : [],
+            images: imageUrl ? [imageUrl] : [],
             metadata: {
               product_id: item.product_id,
               size: item.size || '',

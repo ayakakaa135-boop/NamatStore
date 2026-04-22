@@ -32,11 +32,11 @@
 ## 📸 لقطات من المشروع
 | الصفحة الرئيسية | سلة المشتريات | صفحة إتمام الطلب |
 |:---:|:---:|:---:|
-| ![Main Shop](./public/screenshots/shop-main.png) | ![Cart](./public/screenshots/cart.png) | ![Checkout](./public/screenshots/checkout.png) |
+| ![Main Shop](./public/screenshots/home.jpeg) | ![Cart](./public/screenshots/cart.jpeg) | ![Checkout](./public/screenshots/stripe.jpeg) |
 
-| الأقسام والفلاتر | عرض المنتجات |
+| الأقسام والفلاتر | تجربة الدفع |
 |:---:|:---:|
-| ![Categories](./public/screenshots/categories.png) | ![Products](./public/screenshots/products-list.png) |
+| ![Categories](./public/screenshots/abaya.jpeg) | ![Stripe Checkout](./public/screenshots/stripe2.jpeg) |
 
 ---
 

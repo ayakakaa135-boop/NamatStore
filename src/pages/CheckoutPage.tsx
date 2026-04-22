@@ -203,6 +203,10 @@ export default function CheckoutPage() {
           cancelUrl: `${window.location.origin}/checkout?canceled=true&order_id=${result.orderId}`,
         });
 
+        if (!checkout.url) {
+          throw new Error(i18n.language === 'ar' ? 'فشل استلام رابط الدفع من Stripe.' : 'Failed to receive checkout URL from Stripe.');
+        }
+
         window.location.href = checkout.url;
         return;
       }
